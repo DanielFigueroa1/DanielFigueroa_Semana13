@@ -1,11 +1,18 @@
 package com.example.danielfigueroa_semana13;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -15,7 +22,6 @@ import java.util.ArrayList;
 
 public class ContactosAdaptador extends BaseAdapter {
 
-    private String userId;
     //data
     private ArrayList<Contactos> contactosA;
 
@@ -73,20 +79,22 @@ public class ContactosAdaptador extends BaseAdapter {
 
         botonEliminarContacto.setOnClickListener(
                 (v)->{
-                    String id = contactos.getId();
 
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("contactos").child(userId).child(id);
+                    String id = contactosA.get(position).getId();
+                    Log.e("TAG", contactosA.get(position).getId());
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("contactos").child(contactosA.get(position).getIdUsuario()).child(id);
+
                     reference.setValue(null);
                 }
         );
 
-        botonEliminarContacto.setOnClickListener(
+        botonLlamarContacto.setOnClickListener(
                 (v)->{
-                    String numeroContacto = contactos.getNumeroContacto();
 
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("contactos").child(userId).child(numeroContacto);
-
-
+                    ActivityCompat.requestPermissions((Activity) renglon.getContext(), new String[]{Manifest.permission.CALL_PHONE}, 1);
+                    String telefono = "tel:" + contactosA.get(position).getNumeroContacto();
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(telefono));
+                    renglon.getContext().startActivity(intent);
                 }
         );
 

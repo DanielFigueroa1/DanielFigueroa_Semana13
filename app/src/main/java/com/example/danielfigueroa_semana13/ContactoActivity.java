@@ -65,6 +65,7 @@ public class ContactoActivity extends AppCompatActivity implements View.OnClickL
                 DatabaseReference reference = db.getReference().child("contactos").child(userId).child(id);
                 Contactos contactos = new Contactos(
                         id,
+                        userId,
                         contactoNombre.getText().toString(),
                         contactoNumero.getText().toString()
                 );

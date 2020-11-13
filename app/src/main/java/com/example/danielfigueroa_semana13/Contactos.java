@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 public class Contactos {
 
     private String id;
+    private String idUsuario;
     private String nombreContacto;
     private String numeroContacto;
 
@@ -12,18 +13,29 @@ public class Contactos {
 
     }
 
-    public Contactos (String id, String nombreContacto, String numeroContacto ) {
+    public Contactos (String id, String idUsuario, String nombreContacto, String numeroContacto ) {
         this.id = id;
+        this.idUsuario = idUsuario;
         this.nombreContacto = nombreContacto;
         this.numeroContacto = numeroContacto;
     }
 
     public String getId() {
+
         return id;
     }
 
     public void setId(String id) {
+
         this.id = id;
+    }
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNombreContacto() {
