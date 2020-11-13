@@ -12,8 +12,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
+
 public class ContactosAdaptador extends BaseAdapter {
 
+    private String userId;
     //data
     private ArrayList<Contactos> contactosA;
 
@@ -35,6 +37,7 @@ public class ContactosAdaptador extends BaseAdapter {
 
     @Override
     public int getCount() {
+
         return contactosA.size();
     }
 
@@ -45,6 +48,7 @@ public class ContactosAdaptador extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
+
         return position;
     }
 
@@ -57,6 +61,8 @@ public class ContactosAdaptador extends BaseAdapter {
 
         Contactos contactos = contactosA.get(position);
 
+
+
         TextView nombreContactosLista = renglonView.findViewById(R.id.nombreContactosLista);
         TextView numeroContactosLista = renglonView.findViewById(R.id.numeroContactosLista);
         Button botonEliminarContacto = renglonView.findViewById(R.id.botonEliminarContacto);
@@ -68,8 +74,19 @@ public class ContactosAdaptador extends BaseAdapter {
         botonEliminarContacto.setOnClickListener(
                 (v)->{
                     String id = contactos.getId();
+
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("contactos").child(userId).child(id);
                     reference.setValue(null);
+                }
+        );
+
+        botonEliminarContacto.setOnClickListener(
+                (v)->{
+                    String numeroContacto = contactos.getNumeroContacto();
+
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("contactos").child(userId).child(numeroContacto);
+
+
                 }
         );
 
