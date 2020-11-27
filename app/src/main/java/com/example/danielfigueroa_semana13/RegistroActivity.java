@@ -7,73 +7,78 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.UUID;
+public class RegistroActivity extends AppCompatActivity implements View.OnClickListener {
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseDatabase db;
     private FirebaseAuth auth;
-    private EditText mainCorreo;
-    private EditText mainContrasena;
-    private TextView mainNoCuenta;
-    private Button mainIngresarBoton;
+    private EditText registroNombre;
+    private EditText registroCorreo;
+    private EditText registroContrasena;
+    private EditText registroContrasenaOtra;
+    private Button registroCancelar;
+    private Button registroRegistro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registro);
 
-        mainCorreo = findViewById(R.id.mainCorreo);
-        mainContrasena = findViewById(R.id.mainContrasena);
-        mainNoCuenta = findViewById(R.id.mainNoCuenta);
-        mainIngresarBoton = findViewById(R.id.mainIngresarBoton);
+        registroNombre = findViewById(R.id.registroNombre);
+        registroCorreo = findViewById(R.id.registroCorreo);
+        registroContrasena = findViewById(R.id.registroContrasena);
+        registroContrasenaOtra = findViewById(R.id.registroContrasenaOtra);
+        registroCancelar = findViewById(R.id.registroCancelar);
+        registroRegistro = findViewById(R.id.registroRegistro);
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
 
-        mainIngresarBoton.setOnClickListener(this);
-        mainNoCuenta.setOnClickListener(this);
-        /*Intent i = new Intent(this, ContactoActivity.class);
-                    startActivity(i);*/
+        registroCancelar.setOnClickListener(this);
+        registroRegistro.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mainIngresarBoton:
+            case R.id.registroRegistro:
                 //hacer aqui una consulta (addeventlistenerforsinglevalueevent) a mi firebase y que confirme si aiguen tiene el nombre ya registrad
                 String id = db.getReference().child("usuarios").push().getKey();
                 DatabaseReference reference = db.getReference().child("usuarios").child(id);
-                auth.signInWithEmailAndPassword(mainCorreo.getText().toString(), mainContrasena.getText().toString())
+                Usuario usuario = new Usuario(
+                        id,
+                        registroNombre.getText().toString(),
+                        registroCorreo.getText().toString(),
+                        registroContrasena.getText().toString(),
+                        registroContrasenaOtra.getText().toString()
 
+                );
+                reference.setValue(usuario);//todo esto hace que se registren los usuarios en el firebase
+
+                auth.createUserWithEmailAndPassword(registroCorreo.getText().toString(), registroContrasena.getText().toString())
                 .addOnCompleteListener(
-                    (task)-> {
+                        (task)-> {
                         if (task.isSuccessful()) {
 
                             Intent i = new Intent(this, ContactoActivity.class);
                             i.putExtra("user", id);
                             startActivity(i);
 
-
                         } else {
                             Toast.makeText(this,task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
             );
-
                 break;
 
-
-
-            case R.id.mainNoCuenta:
-                Intent j = new Intent(this, RegistroActivity.class);
+            case R.id.registroCancelar:
+                Intent j = new Intent(this, MainActivity.class);
                 startActivity(j);
                 break;
         }
